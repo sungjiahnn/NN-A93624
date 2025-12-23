@@ -1,7 +1,7 @@
 % Sung Ji Ahn 2023
 
 clear all 
-% input calcium signals per manually drawn roi on CalciumDX
+% input calcium signals per manually drawn roi on CalciumDX (https://github.com/ackman678/CalciumDX)
 load('matlab.mat','tr','ncells','len','tmpres')
 
 % tr      : ncells x len matrix of raw fluorescence time series

@@ -57,7 +57,7 @@ refGray = sum(refRGB, 3);
 x1 = roiPos(1); y1 = roiPos(2); w = roiPos(3); h = roiPos(4);
 refCrop = refGray(y1:(y1+h), x1:(x1+w));
 
-radonStart = tic;
+analysisStart = tic;
 idx = 1;
 
 while hasFrame(v)
@@ -75,8 +75,8 @@ while hasFrame(v)
     refCrop = curCrop;
 end
 
-radonTime = toc(radonStart);
-disp(['Movement tracking time was ' num2str(radonTime) ' seconds.']); disp(' ');
+analysisTime = toc(analysisStart);
+disp(['Movement tracking time was ' num2str(analysisTime) ' seconds.']); disp(' ');
 
 % Trim unused preallocation
 displacement = displacement(~isnan(displacement));
@@ -162,4 +162,4 @@ save(fullfile(filepath, [baseFileName, '_Mresults.mat']), ...
     'videoPath', 'roiPos', 'displacement', 'filteredDisplacement', ...
     'resampledDisplacement', 'displacementAcceleration', ...
     'displacementThreshold', 'displacementBinary', 'motion_bin', ...
-    'percent_moved', 'samplingRate', 'downSampleRate', 'radonTime');
+    'percent_moved', 'samplingRate', 'downSampleRate', 'analysisTime');

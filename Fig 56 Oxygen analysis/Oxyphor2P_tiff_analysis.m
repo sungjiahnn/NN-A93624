@@ -1,4 +1,7 @@
 % Sung Ji Ahn 2024
+% This code analyzes an Oxyphor 2P lifetime TIFF stack to estimate pO₂ over space and time.
+% For each frame and spatial row, it averages repeated fluorescence decay curves, fits a single-exponential decay to extract the lifetime, then converts lifetime to oxygen partial pressure using a calibration equation.
+% The result is a row × time map of pO₂ and corresponding time-course plots, which are saved along with all intermediate variables.
 
 close all
 clear all

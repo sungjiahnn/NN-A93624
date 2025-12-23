@@ -1,42 +1,46 @@
+% Sung Ji Ahn 2025
+% plot intravenous pO2 traces A/V, export first peak and shallow peak values for
+% stats
+
 function plot_pO2_traces_WT_vs_PS19()
 
-    % === Parameters ===
+    % Parameters
     resample_time = 0:0.1:60;  % 10 Hz
     baseline_range = find(resample_time >= 10 & resample_time <= 15);
     vessel_types = {'a', 'v'};
     resample_time = 0:0.1:60;  % 10 Hz smoothing
     %time = [];  % will store time vector from first file
 
-    % === Prompt user to select WT files ===
+    % Select WT files 
     disp("Select CSV files for WT mice");
     [wt_files, wt_path] = uigetfile('*.csv', 'Select WT CSV files', 'MultiSelect', 'on');
     if isequal(wt_files, 0), return; end
     if ischar(wt_files), wt_files = {wt_files}; end
 
-    % === Prompt user to select PS19 files ===
+    % Select PS19 files
     disp("Select CSV files for PS19 mice");
     [ps_files, ps_path] = uigetfile('*.csv', 'Select PS19 CSV files', 'MultiSelect', 'on');
     if isequal(ps_files, 0), return; end
     if ischar(ps_files), ps_files = {ps_files}; end
 
-    % === Get time vector from first WT file ===
+    % Get time vector from first WT file
     first_file = readcell(fullfile(wt_path, wt_files{1}));
     time = cell2mat(first_file(1,2:end));
     peak1_range = find(time >= 17 & time <= 19);
     peak2_range = find(time >= 35 & time <= 45);
 
-    % === Process groups with smoothing ===
+    % Process groups with smoothing 
     data.WT = process_group(wt_files, wt_path, vessel_types, baseline_range, time, resample_time);
     data.PS19 = process_group(ps_files, ps_path, vessel_types, baseline_range, time, resample_time);
 
-    % === Plot for each vessel type ===
+    % Plot for each vessel type 
     for v = 1:length(vessel_types)
         vt = vessel_types{v};
         plot_group(data, resample_time, vt, false);
         plot_group(data, resample_time, vt, true);
     end
     
-    % === Export sO2 and OEF peaks to CSV ===
+    % Export sO2 and OEF peaks to CSV 
     export_peak_summary(data, time, peak1_range, peak2_range);
 
     save('pO2_traces_by_mouse.mat', 'data', 'resample_time');
@@ -85,7 +89,7 @@ function group_data = process_group(file_list, path, vessel_types, baseline_rang
 end
 
 function plot_group(data, time, vessel_type, normalized)
-    % === Prepare data ===
+    % Prepare data 
     groupnames = {'WT', 'PS19'};
     color_map = {[0 0.45 0.74], [0.85 0.33 0.1]};
     fill_map  = {[0.7 0.85 1], [1 0.8 0.7]};

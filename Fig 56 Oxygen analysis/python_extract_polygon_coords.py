@@ -1,5 +1,4 @@
-# By Yun Losson 2025 July
-# CODE ALLOWING FOR THE SLECYION OF POINTS AND THEN A POLYGON !
+# By Yun Losson 2025 summer
 # Input : pO2 measurements and x and y coordinates
 # Output: reference point and pO2 measurements and its coordinates within defined polygon
 

@@ -1,34 +1,37 @@
+% Sung Ji Ahn 2025
+% tissue pO2 A/C/V at defined time for statistical analysis
+
 function analyze_pO2_nested()
-    % === Parameters ===
+    % Parameters
     base_range = 12:17; % 10:15 
     stim_range = 18:52; % 
     first_peak_range = 19:21; % 17:19
     second_peak_range = 41:52; % 35:45
 
-    % === Select WT files ===
+    % Select WT files 
     disp("Select CSV files for WT mice");
     [wt_files, wt_path] = uigetfile('*.csv', 'Select WT CSV files', 'MultiSelect', 'on');
     if isequal(wt_files, 0), return; end
     if ischar(wt_files), wt_files = {wt_files}; end
 
-    % === Select PS19 files ===
+    % Select PS19 files 
     disp("Select CSV files for PS19 mice");
     [ps_files, ps_path] = uigetfile('*.csv', 'Select PS19 CSV files', 'MultiSelect', 'on');
     if isequal(ps_files, 0), return; end
     if ischar(ps_files), ps_files = {ps_files}; end
 
-    % === Process and compile long-format data ===
+    % Process and compile long-format data
     all_data = table();
     all_data = process_mouse_group(wt_files, wt_path, 'WT', all_data, base_range, stim_range, first_peak_range, second_peak_range);
     all_data = process_mouse_group(ps_files, ps_path, 'PS19', all_data, base_range, stim_range, first_peak_range, second_peak_range);
 
-    % === Save long-format data ===
+    % Save long-format data
     timestamp = datestr(now, 'yyyymmdd_HHMMSS');
     longname = ['nested_pO2_peaks_' timestamp '.csv'];
     writetable(all_data, longname);
     disp(['Saved long-format data to: ' longname]);
 
-    % === Export per-mouse summary ===
+    % Export per-mouse summary
     export_per_mouse_summary(all_data);
 end
 

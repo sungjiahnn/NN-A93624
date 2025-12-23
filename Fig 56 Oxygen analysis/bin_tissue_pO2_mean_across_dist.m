@@ -1,31 +1,34 @@
+% Sung Ji Ahn 2025
+% plot tissue pO2 over distance from a defined vessel (penetrating arteriole/ascending venule)
+
 function plot_pO2_gradient_WT_vs_PS19_perFileAveraged()
-    % -------- Parameters --------
+    % Parameters 
     bin_width = 11;     % µm
     max_dist  = 160;    % µm
     bin_edges   = 0:bin_width:max_dist;
     bin_centers = bin_edges(1:end-1) + bin_width/2;
 
-    % ---- Select WT files ----
+    % Select WT files 
     disp("Select WT (wild-type) CSV files");
     [wt_files, wt_path] = uigetfile('*.csv', 'Select WT CSV files', 'MultiSelect', 'on');
     if isequal(wt_files,0), disp('No WT files selected'); return; end
     if ischar(wt_files), wt_files = {wt_files}; end
 
-    % ---- Select PS19 files ----
+    % Select PS19 files 
     disp("Select PS19 CSV files");
     [ps_files, ps_path] = uigetfile('*.csv', 'Select PS19 CSV files', 'MultiSelect', 'on');
     if isequal(ps_files,0), disp('No PS19 files selected'); return; end
     if ischar(ps_files), ps_files = {ps_files}; end
 
-    % ---- Per-file binning (each file -> 1 value per bin) ----
+    % Per-file binning (each file -> 1 value per bin) 
     WT_bins  = per_file_binned_means(wt_files, wt_path, bin_edges);   % nWT x nBins
     PS_bins  = per_file_binned_means(ps_files, ps_path, bin_edges);   % nPS x nBins
 
-    % ---- Average across files (unweighted) ----
+    % Average across files (unweighted)
     [mean_wt, sem_wt, n_wt] = across_files_mean_sem(WT_bins);
     [mean_ps, sem_ps, n_ps] = across_files_mean_sem(PS_bins);
 
-    % ---- Plot (shaded SEM) ----
+    % Plot (shaded SEM)
     figure; hold on; box on; grid on;
     colWT   = [0 0.45 0.74];
     colPS19 = [0.85 0.33 0.1];
@@ -52,7 +55,7 @@ function plot_pO2_gradient_WT_vs_PS19_perFileAveraged()
     % ylim([10 65]);
 end
 
-% ===================== Helpers =====================
+% Helpers
 
 function M = per_file_binned_means(files, folder, bin_edges)
     % Returns an nFiles x nBins matrix of per-file bin means (NaN if a bin has no points in that file)

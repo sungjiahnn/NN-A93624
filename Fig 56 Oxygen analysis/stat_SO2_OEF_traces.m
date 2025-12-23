@@ -1,23 +1,26 @@
+% Sung Ji Ahn 2025
+% OEF baseline, during stimulation, recovery
+
 function plot_sO2_traces_WT_vs_PS19()
-    % === Parameters ===
+    % Parameters
     peak1_range = [];
     peak2_range = [];
     vessel_types = {'a', 'v'};
     resample_time = 0:0.1:60;  % 10 Hz smoothing
 
-    % === Prompt user to select WT files ===
+    % Select WT files 
     disp("Select CSV files for WT mice");
     [wt_files, wt_path] = uigetfile('*.csv', 'Select WT CSV files', 'MultiSelect', 'on');
     if isequal(wt_files, 0), return; end
     if ischar(wt_files), wt_files = {wt_files}; end
 
-    % === Prompt user to select PS19 files ===
+    % Select PS19 files 
     disp("Select CSV files for PS19 mice");
     [ps_files, ps_path] = uigetfile('*.csv', 'Select PS19 CSV files', 'MultiSelect', 'on');
     if isequal(ps_files, 0), return; end
     if ischar(ps_files), ps_files = {ps_files}; end
 
-    % === Get time vector from first WT file ===
+    % Get time vector from first WT file
     first_file = readcell(fullfile(wt_path, wt_files{1}));
     time = cell2mat(first_file(1,2:end));
     peak1_range = find(time >= 17 & time <= 19);
@@ -26,17 +29,17 @@ function plot_sO2_traces_WT_vs_PS19()
     stim_range = find(time >= 15 & time <= 45);
     recovery_range = find(time >= 45 & time <= 55);
 
-    % === Process groups ===
+    % Process groups
     data.WT = process_group(wt_files, wt_path, vessel_types, resample_time, time);
     data.PS19 = process_group(ps_files, ps_path, vessel_types, resample_time, time);
 
-    % === Plot sO2 and OEF ===
+    % Plot sO2 and OEF
     plot_sO2_and_OEF(data, time);
 
-    % === Export sO2 and OEF peaks to CSV ===
+    % Export sO2 and OEF peaks to CSV
     export_peak_summary(data, time, peak1_range, peak2_range, base_range, stim_range, recovery_range);
 
-    % === Export full OEF traces to CSV ===
+    % Export full OEF traces to CSV
     export_oef_traces(data, time);
 
 end
